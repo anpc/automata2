@@ -1,0 +1,183 @@
+\documentclass{article}
+\usepackage[cp1255]{inputenc}
+\usepackage{amsmath}
+\usepackage[english,hebrew]{babel}
+\usepackage{biditex}
+\usepackage{graphics}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\tikzset{
+    pics/circle vertically split/.style 2 args = {
+       code = {
+         \node[inner sep=3pt,left] (-left) {#1};
+         \node[inner sep=3pt,right] (-right) {#2};
+         \path let
+              \p1 = ($(-left.north west) - (-left.east)$),
+              \p2 = ($(-right.west) - (-right.south east)$),
+              \n1 = {max(veclen(\p1), veclen(\p2))*2}
+           in node[minimum size=\n1, circle, draw] (-shape) at (0,0) {};
+         \draw (-shape.north) -- (-shape.south);
+       }
+    }
+}
+
+
+\begin{document}
+\title{אוטומטים \Lnum{2} - הרצאה מס' \Lnum{2}}
+\date{\Lnum{26/03/17}}
+\author{}
+\maketitle
+\large
+\textbf{\underline{משפט נרוד:}}
+תהי
+$L \subseteq{\Sigma^*}$,
+אזי \L{L} רגולרית אם"ם ל-$R_{L}$ יש מספר סופי של מחלקות שקילות.
+
+\setlength\parskip{\baselineskip}
+
+נמשיך בהגדרות רלוונטיות איתן התחלנו בהרצאה הקודמת:
+
+\setlength\parskip{\baselineskip}
+
+\textbf{הגדרה:}
+תהי $L \subseteq \Sigma^*$ ויהי \L{R} יחס שקילות מעל $\Sigma^*X \Sigma^*$. נאמר ש-\L{R} \underline{מעדן} את \L{L} אם"ם: $(x,y) \in R \rightarrow x \in L \Leftrightarrow y \in L$.
+
+\setlength\parskip{\baselineskip}
+
+)\emph{\underline{הערה חשובה:}} היחס מוגדר על $\Sigma^*$ ולא רק על \L{L}(
+
+\setlength\parskip{\baselineskip}
+
+\textbf{הגדרה:}
+יהי
+$R \subseteq{\Sigma^*X \Sigma^*}$
+יחס שקילות. נאמר ש-\L{R}
+\underline{אינווריאנטי מימין} אם לכל
+$(x,y)\in \Sigma^*$ :\\
+$(x,y)\in R \Rightarrow \forall z, (xz,yz)\in R$
+
+\setlength\parskip{\baselineskip}
+
+\underline{דוגמה \Lnum{1}:}
+
+\setlength\parskip{\baselineskip}
+\inputencoding{latin9}\selectlanguage{english}
+\begin{tikzpicture}
+\draw (2,-1) pic (A) {circle vertically split={$a,b,ba$}{$\Sigma^*-\{a,b\}$}};
+\end{tikzpicture}
+\inputencoding{cp1255}\selectlanguage{hebrew}
+
+\setlength\parskip{\baselineskip}
+
+יחס זה אינו אינווריאנטי מימין. למה?\\
+דוגמה נגדית: $(a,b) \in R$, אבל עבור $z=a$ : $(az,bz) \notin R$
+
+\setlength\parskip{\baselineskip}
+
+\underline{דוגמה \Lnum{2}:}
+$R=\{(x,y)\in \{a,b\}^*X \{a,b\}^* | \#_{a}(x) \equiv \#_{a}(y)  mod 3\}$\\
+היחס הזה אכן אינווריאנטי מימין. נראה למה:\\
+יהי
+$(x,y) \in R$\\
+אזי
+$\#_{a}(x) \equiv \#_{a}(y)  mod 3$     \textbf{)*(}\\
+יהי
+$z \in \Sigma^*$ אזי:
+\begin{equation*}
+	\left\{
+	\begin{array}{rl}
+	\#_{a}(xz) = \#_{a}(x) + \#_{a}(z) \\
+	\#_{a}(yz) = \#_{a}(y) + \#_{a}(z)
+	\end{array}\right.
+\end{equation*}
+ומתוך \textbf{)*(} נובע:
+$\#_{a}(xz) \equiv \#_{a}(yz)  mod 3  \Rightarrow (xz,yz) \in R$
+
+\setlength\parskip{\baselineskip}
+
+\textbf{\emph{טענה \Lnum{1}:}} יהי \L{A DFA} עם א"ב $\Sigma$.
+אזי היחס $R_{a}$:\\
+\Lnum{1}( מעדן את $L(A)$\\
+\Lnum{2}( אינווריאנטי מימין\\
+)\emph{\underline{הערה חשובה:}} בשיעור הקודם הראינו כי $R_{a}$ הוא יחס שקילות(
+
+\setlength\parskip{\baselineskip}
+
+\textbf{\emph{הוכחה:}}\\
+\Lnum{1}( יהיו $(x,y) \in R_{a}$ אזי:\\
+$\hat{\delta}(q_{0},x) = \hat{\delta}(q_{0},y) = q \in Q$. לפיכך ייתכנו שני מקרים:\\
+א. אם $q \in F$ אז $x,y \in L$ )ואז כמובן $x \in L \Leftrightarrow y \in L$ מתקיים(.\\
+ב. אם $q \notin F$ אז $x,y \notin L$ )וגם אז $x \in L \Leftrightarrow y \in L$ מתקיים. הפעם כ-\L{False}(.
+
+\setlength\parskip{\baselineskip}
+
+\Lnum{2}( יהיו $(x,y) \in {R_{a}}$ \textbf{)*(}. נראה שלכל $z \in \Sigma^*$ מתקיים $(xz,yz) \in R_{a}$:\\
+$\hat{\delta}(q_{0},xz) = \hat{\delta}(\hat{\delta}(q_{0},x),z) \underset{by \textbf{(*)}}{=} \hat{\delta}(\hat{\delta}(q_{0},y),z) = \hat{\delta}(q_{0},yz)$\\
+מ.ש.ל
+
+\setlength\parskip{\baselineskip}
+
+\textbf{\emph{טענה \Lnum{2}:}} תהי $L \subseteq \Sigma^*$ שפה. אז $R_{L}$ הוא:\\
+\Lnum{1}( יחס שקילות )הוכחנו בשיעור שעבר(\\
+\Lnum{2}( מעדן את \L{L}\\
+\Lnum{3}( אינווריאנטי מימין
+
+\setlength\parskip{\baselineskip}
+
+\textbf{\emph{הוכחה:}}\\
+\Lnum{2}( יהיו $(x,y) \in R_{L}$, אזי לכל \L{z} : $xz \in L \Leftrightarrow yz \in L$ )מהגדרת $R_{L}$(.\\
+נציב $z=\varepsilon$ ונקבל $x \in L \Leftrightarrow y \in L$ כנדרש )הגדרת "מעדן"(.\\
+מ.ש.ל
+
+\setlength\parskip{\baselineskip}
+
+\Lnum{3}( נניח $(x,y) \in R_{L}$ ונראה שלכל $z \in \Sigma^*$ מתקיים $(xz,yz) \in R_{L}$.\\
+נקבע $z \in \Sigma^*, (x,y) \in R_{L}$ מסויימים. \underline{צ"ל:} לכל $w \in \Sigma^*$ מתקיים: $\big((xz)w,(yz),w\big) \in R_{L}$.\\
+כייון ש $(x,y) \in R_{L}$ מתקיים: $x\underset{z'}{(zw)} \in L \Leftrightarrow y\underset{z'}{(zw)} \in L$.
+
+\setlength\parskip{\baselineskip}
+
+מאסוציאטיביות של שרשור מחרוזות, נוכל להזיז את הסוגריים ולקבל:\\
+$\underset{(xz)w}{x(zw)} \in L \Leftrightarrow \underset{(yz)w}{y(zw)} \in L$\\
+מ.ש.ל
+
+\setlength\parskip{\baselineskip}
+
+\textbf{\underline{משפט האפיון של $R_{L}$:}}
+תהי  $L \subseteq \Sigma^*$, אזי אם $R \subseteq{\Sigma^*X \Sigma^*}$ הוא יחס שקילות המעדן את \L{L} ואינווריאנטי מימין, אזי \L{R} מעדן את $R_{L}$.\\
+במילים אחרות: $R_{L}$ הינה החלוקה הכי גסה האפשרית של $\Sigma^*$ המעדנת את \L{L} ומתאימה ליחס שקילות אינווריאנטי מימין.
+
+\setlength\parskip{\baselineskip}
+
+\textbf{\underline{הוכחה:}}\\
+יהיו $(x,y) \in R$, נרצה להראות שגם $(x,y) \in R_{L}$.\\
+\begin{equation*}
+	(x,y) \in R \underset{right-invariant}{\Longrightarrow} \forall z,(xz,yz) \in R \underset{R-delights-L}{\Longrightarrow}
+	\forall z,(xz \in L \Leftrightarrow yz \in L)\\
+\end{equation*}
+ומהגדרת $R_{L}$: $(xz,yz) \in R_{L}$.\\
+מ.ש.ל
+
+\setlength\parskip{\baselineskip}
+
+כעת נוכיח את משפט נרוד.
+
+\setlength\parskip{\baselineskip}
+
+\textbf{\underline{הוכחת משפט נרוד:}}\\
+\underline{כיוון $\Leftarrow$:} תהי $L \subseteq \Sigma^*$ שפה רגולרית. נראה כעת שמס' מחלקות השקילות של $R_{L}$ הוא סופי.\\
+נסמן את מס' מחלקות השקילות של $R_{L}$ כך: $index(R_{L})$.\\
+כיוון ש-\L{L} רגולרית, קיים \L{DFA A} שמקבל אותה. מטענה \Lnum{1} $R_{A}$ מעדן ואינווריאנטי מימין. כמו כן: $index(R_{A}) \leq |Q|$.
+זה מתקיים כמובן מכיוון שמחלקות השקילות של $R_{A}$ היא קבוצת ה-$L_{q}$ים הלא ריקים של \L{A}.\\
+
+\setlength\parskip{\baselineskip}
+
+ממשפט האפיון של $R_{L}$ מתקיים:\\
+$index(R_{A}) \underset{R_{A}-delights-R_{L}}{\geq}index(R_{L})$.\\
+לפיכך, $R_{L}$ בהכרח סופי.
+
+\setlength\parskip{\baselineskip}
+
+את הכיוון השני נראה בהרצאה הבאה.
+
+\end{document}
